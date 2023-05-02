@@ -1,0 +1,53 @@
+
+minicom -C stationary Stationarydata.bag
+cd ~/bagfile
+
+
+roscore
+
+
+RUN THE PROGRAM
+cd ~/catkin_ws
+rosrun gps_driver driver.py
+
+CAPTURE THE PUBLISH DATA
+source ./devel/setup.bash
+catkin_make
+rostopic echo /gps_data
+
+
+TO START UP PUCK
+ls -lt /dev/tty* | head
+sudo chmod 777 /dev/ttyUSB0
+
+EMULATOR
+cd ~/catkin_ws/serial_emulator
+python3 serial_emulator.py --file gps-data.txt --sample_time 1
+
+RECORD THE BAG
+cd ~/bagfiles
+rosbag record -O test2.bag /gps_data
+
+TO CONVERT BAG TO CSV
+rosrun rosbag_to_csv rosbag_to_csv.py
+
+TO RUN JUPYTER NOTEBOOK
+cd ~/miniconda3
+conda activate
+jupyter-notebook
+
+roslaunch gps_driver driver.launch port:=/dev/pts/4
+
+
+EMULATOR FOR STRUCTURE CHECK
+cd /catkin_ws/serial_emulator
+python3 serial_emulator.py --file gps-data.txt
+
+
+STRUCTURE CHECK
+python3 LAB1_ROS_Struct_Checker.py '/dev/pts/3'
+
+LAUNCHING CODE
+cd catkin_ws
+roslaunch gps_driver driver.launch port:=/dev/pts/3
+

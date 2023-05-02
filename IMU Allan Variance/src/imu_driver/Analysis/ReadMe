@@ -1,0 +1,41 @@
+minicom -C stationary Stationarydata.bag
+cd ~/bagfile
+
+
+roscore
+
+
+RUN THE PROGRAM
+cd ~/catkin_ws
+rosrun rtk_gps_test2 driver.py
+
+CAPTURE THE PUBLISH DATA
+source ./devel/setup.bash
+catkin_make
+rostopic echo /gps_data
+
+
+TO START UP PUCK
+ls -lt /dev/tty* | head
+sudo chmod 777 /dev/ttyUSB0
+
+EMULATOR
+cd ~/catkin_ws/serial_emulator
+python3 serial_emulator.py --file imu-data.txt --sample_time 1
+
+RECORD THE BAG
+cd ~/bagfiles
+rosbag record -O test2.bag /gps_data
+
+TO CONVERT BAG TO CSV
+rosrun imu_driver driver.py port:=/dev/ttyUSB0
+
+TO RUN JUPYTER NOTEBOOK
+cd ~/miniconda3
+conda activate
+jupyter-notebook
+
+LAUNCHING THE CODE
+source ./devel/setup.bash
+catkin_make
+roslaunch imu_driver driver.launch port:=/dev/ttyUSB0

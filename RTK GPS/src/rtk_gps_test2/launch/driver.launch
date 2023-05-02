@@ -1,0 +1,4 @@
+<launch>
+	<arg name="port" default="/dev/ttyUSB0"/>
+	<node pkg="rtk_gps_test2" type="driver.py" name="gps" output="screen" args="$(arg port)"/>
+</launch>
